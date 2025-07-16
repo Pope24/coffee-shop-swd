@@ -61,6 +61,156 @@ body {
         background-color: #e67e22;
     }
 
+/* Admin Dashboard Overview */
+.admin-dashboard {
+    margin-bottom: 30px;
+}
+
+.dashboard-stat {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+    transition: transform 0.3s;
+}
+
+.dashboard-stat:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.stat-icon.orders {
+    background-color: rgba(93, 64, 55, 0.15);
+    color: var(--coffee-dark);
+}
+
+.stat-icon.users {
+    background-color: rgba(255, 171, 64, 0.15);
+    color: var(--coffee-accent);
+}
+
+.stat-icon.products {
+    background-color: rgba(141, 110, 99, 0.15);
+    color: var(--coffee-medium);
+}
+
+.stat-icon.revenue {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: #4CAF50;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--coffee-dark);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--coffee-secondary-text);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Chart section */
+.chart-container {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.chart-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--coffee-dark);
+    border-bottom: 2px solid var(--coffee-light);
+    padding-bottom: 10px;
+}
+
+/* Recent activities */
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-item {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--coffee-light);
+    display: flex;
+    align-items: center;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(93, 64, 55, 0.15);
+    color: var(--coffee-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 15px;
+}
+
+.activity-details {
+    flex-grow: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    margin-bottom: 3px;
+    color: var(--coffee-dark);
+}
+
+.activity-time {
+    font-size: 0.8rem;
+    color: var(--coffee-secondary-text);
+}
+
+.activity-status {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-completed {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: #4CAF50;
+}
+
+.status-pending {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #FFC107;
+}
+
+.status-canceled {
+    background-color: rgba(244, 67, 54, 0.15);
+    color: #F44336;
+}
+
 /* Correct usage of media queries */
 /* NO @ symbol used here */
 @media (max-width: 768px) {
@@ -74,6 +224,16 @@ body {
 
     .card-body i {
         font-size: 40px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
     }
 }
 

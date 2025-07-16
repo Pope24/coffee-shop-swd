@@ -194,36 +194,50 @@
         </table>
 
     </div>
-    <div class="d-flex justify-content-between align-items-center mb-1 ">
-        <div>
-            <span class="mr-2">Rows per page:</span>
-            <select asp-items="@Model.PageSizeList" id="pageSizeSelector" class="rounded-3">
+    <div class="pagination-container">
+        <div class="pagination-info">
+            <span>Rows per page:</span>
+            <select asp-items="@Model.PageSizeList" id="pageSizeSelector" class="pagination-size-selector">
             </select>
         </div>
-        <div>
-            <nav aria-label="Page navigation">
-                <ul class="pagination mb-0">
-                    <li class="page-item @(!Model.Users.HasPreviousPage ? "disabled" : "")">
-                        <a class="page-link"
-                           asp-route-pageIndex="@(Model.Users.PageIndex-1)"
-                           asp-route-pageSize="@Model.Users.PageSize">Previous</a>
-                    </li>
-                    @for (int i = 1; i <= Model.Users.TotalPages; i++)
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item @(!Model.Users.HasPreviousPage ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-route-pageIndex="@(Model.Users.PageIndex-1)"
+                       asp-route-pageSize="@Model.Users.PageSize">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                
+                @{
+                    var startPage = Math.Max(1, Model.Users.PageIndex - 2);
+                    var endPage = Math.Min(Model.Users.TotalPages, startPage + 4);
+                    
+                    if (endPage - startPage < 4 && startPage > 1)
                     {
-                        <li class="page-item @(Model.Users.PageIndex == i ? "active" : "")">
-                            <a class="page-link"
-                               asp-route-pageIndex="@i"
-                               asp-route-pageSize="@Model.Users.PageSize">@i</a>
-                        </li>
+                        startPage = Math.Max(1, endPage - 4);
                     }
-                    <li class="page-item @(!Model.Users.HasNextPage ? "disabled" : "")">
+                }
+                
+                @for (int i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(Model.Users.PageIndex == i ? "active" : "")">
                         <a class="page-link"
-                           asp-route-pageIndex="@(Model.Users.PageIndex+1)"
-                           asp-route-pageSize="@Model.Users.PageSize">Next</a>
+                           asp-route-pageIndex="@i"
+                           asp-route-pageSize="@Model.Users.PageSize">@i</a>
                     </li>
-                </ul>
-            </nav>
-        </div>
+                }
+                
+                <li class="page-item @(!Model.Users.HasNextPage ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-route-pageIndex="@(Model.Users.PageIndex+1)"
+                       asp-route-pageSize="@Model.Users.PageSize">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
 </div>
@@ -248,21 +262,22 @@
         });
         $('#pageSizeSelector').on('change', function () {
             var pageSize = $(this).val();
-            var urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('pageSize', pageSize);
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
+            var currentUrl = window.location.href;
+            var url = new URL(currentUrl);
+            url.searchParams.set('pageSize', pageSize);
+            url.searchParams.set('pageIndex', 1);
+            window.location.href = url.toString();
         });
-
         $('#applyFilter').on('click', function () {
-            const sortBy = $('#sortby').val();
-            const sortDirection = $('#dir').val();
-            const accountType = $('#include').val();
-            const filter = `${sortBy}-${sortDirection}-${accountType}`;
-            var urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('filter', filter);
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
+            var sortBy = $('#sortby').val();
+            var dir = $('#dir').val();
+            var include = $('#include').val();
+            var url = new URL(window.location.href);
+            url.searchParams.set('sortBy', sortBy);
+            url.searchParams.set('dir', dir);
+            url.searchParams.set('include', include);
+            url.searchParams.set('pageIndex', 1);
+            window.location.href = url.toString();
         });
-
-
     </script>
 }
