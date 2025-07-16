@@ -136,7 +136,7 @@
         }
 
         const urlParts = window.location.pathname.split('/');
-        const tableId = urlParts[urlParts.length - 1];
+        const tableId = @Model.TableId;
 
         if (isNaN(tableId) || tableId <= 0) {
             console.log('No table ID found in URL');

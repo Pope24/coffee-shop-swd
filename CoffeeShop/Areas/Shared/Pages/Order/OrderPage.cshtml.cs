@@ -25,7 +25,7 @@ namespace CoffeeShop.Areas.Shared.Pages.Order
             _mapper = mapper;
         }
 
-        public string TableId { get; set; }
+        public string TableId { get; set; } = "1";
         public IEnumerable<CategoryVM> Category { get; set; } = default!;
         public IEnumerable<ProductVM> Product { get; set; } = default!;
         public IEnumerable<ProductSizeVM> ProductSize { get; set; } = default!;
@@ -55,7 +55,7 @@ namespace CoffeeShop.Areas.Shared.Pages.Order
                 }
             }
 
-            TableId = Id;
+            TableId = Id ?? "1";
         }
     }
 }
