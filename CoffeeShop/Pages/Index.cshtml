@@ -1,77 +1,99 @@
 ﻿@page
-@model CoffeeShop.Pages.IndexModel
+@model IndexModel
 @{
-    var featuredProducts = new List<dynamic>
-    {
-        new { Id = 1, Name = "Espresso", ImageUrl = "https://cubes-asia.com/storage/blogs/2023/cafe-espresso.jpg", Price = 50.00 },
-        new { Id = 2, Name = "Cappuccino", ImageUrl = "https://vinbarista.com/uploads/news/cappuccino-la-gi-cach-lam-1-ly-cafe-cappuccino-chuan-vi-y-202212231043.png", Price = 60.00 },
-        new { Id = 3, Name = "Latte", ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSNw7oOeCCCIv_D1ok78I61XqgUl1ZU_S2DA&s", Price = 65.00 },
-        new { Id = 4, Name = "Mocha", ImageUrl = "https://caphenguyenchat.vn/wp-content/uploads/2023/03/Mocha-1fc71f7.png", Price = 70.00 }
-    };
+    ViewData["Title"] = "Home";
 }
 
-<!-- Welcome Section -->
-<div class="text-center my-5">
-    <h1 class="display-4">Welcome to Our Coffee Shop!</h1>
-    <p>Explore our premium selection of coffees and discover your favorite brew.</p>
+<div class="hero">
+    <div class="container">
+        <h1>Welcome to CoffeeShop</h1>
+        <p>Discover our premium coffees and delicious treats</p>
+        <a asp-area="Shared" asp-page="/Order/OrderPage" class="btn btn-lg btn-outline-light">Order Now</a>
+    </div>
 </div>
 
-<!-- Carousel Section -->
-<div id="coffeeCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="https://static.vecteezy.com/system/resources/previews/010/566/757/non_2x/international-coffee-day-banner-design-with-wooden-background-illustration-vector.jpg" class="d-block w-100 carousel-img" alt="Coffee Image 1">
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <i class="bi bi-cup-hot feature-icon"></i>
+                <h3 class="feature-title">Premium Coffee</h3>
+                <p>We use only the highest quality beans, roasted to perfection to bring out their unique flavors.</p>
+            </div>
         </div>
-        <div class="carousel-item">
-            <img src="https://t4.ftcdn.net/jpg/07/04/63/61/360_F_704636104_X2ASqEvSPr9PzEgXmliLJytztHTPMdtN.jpg" class="d-block w-100 carousel-img" class="d-block w-100 carousel-img" alt="Coffee Image 2">
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <i class="bi bi-bag-check feature-icon"></i>
+                <h3 class="feature-title">Easy Ordering</h3>
+                <p>Order your favorite coffee and snacks with just a few clicks for pickup or table service.</p>
+            </div>
         </div>
-        <div class="carousel-item">
-            <img src="https://media.licdn.com/dms/image/C5612AQHLeapQMS9byA/article-cover_image-shrink_720_1280/0/1530818735344?e=2147483647&v=beta&t=QQNar4JUKxNN-d1SS9uwD6a_WKAC8TBwkJ-fpsLbrbo" class="d-block w-100 carousel-img" alt="Coffee Image 3">
+        <div class="col-md-4 mb-4">
+            <div class="feature-card">
+                <i class="bi bi-people feature-icon"></i>
+                <h3 class="feature-title">Great Atmosphere</h3>
+                <p>Enjoy your coffee in our cozy shop with free Wi-Fi and friendly service.</p>
+            </div>
         </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#coffeeCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#coffeeCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
 
-<!-- Featured Products Section -->
-<section class="product_section py-5">
-    <div class="container">
-        <div class="section_title text-center mb-4">
-            <h2>Our Bestsellers</h2>
-            <p>Check out our most popular coffee drinks</p>
-        </div>
-        <div class="row g-4">
-            @foreach (var product in featuredProducts)
-            {
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="single_product card h-100 shadow-sm">
-                        <div class="product_thumb">
-                            <a href="/product/@product.Id">
-                                <img src="@product.ImageUrl" alt="@product.Name" class="card-img-top rounded">
-                            </a>
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Special Offerings</h4>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <span class="badge bg-coffee-medium p-2 rounded-circle"><i class="bi bi-star-fill text-white"></i></span>
                         </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><a href="/product/@product.Id" class="text-dark">@product.Name</a></h5>
-                            <p class="current_price text-success fw-bold">@product.Price.ToString("C")</p>
-                            <a asp-area="Shared" asp-page="/Order/OrderPage" class="btn btn-outline-primary btn-sm">Buy Now</a>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="mb-1">Seasonal Blends</h5>
+                            <p class="mb-0">Try our limited edition seasonal coffee blends</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <span class="badge bg-coffee-medium p-2 rounded-circle"><i class="bi bi-cup-straw text-white"></i></span>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="mb-1">Specialty Drinks</h5>
+                            <p class="mb-0">Handcrafted specialty coffee creations</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <span class="badge bg-coffee-medium p-2 rounded-circle"><i class="bi bi-cake2 text-white"></i></span>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h5 class="mb-1">Fresh Pastries</h5>
+                            <p class="mb-0">Freshly baked pastries made daily</p>
                         </div>
                     </div>
                 </div>
-            }
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Hours & Location</h4>
+                    <div class="mb-4">
+                        <h5><i class="bi bi-clock me-2"></i> Hours</h5>
+                        <p class="mb-1">Monday - Friday: 7:00 AM - 8:00 PM</p>
+                        <p class="mb-0">Saturday - Sunday: 8:00 AM - 9:00 PM</p>
+                    </div>
+                    <div>
+                        <h5><i class="bi bi-geo-alt me-2"></i> Location</h5>
+                        <p class="mb-1">123 Coffee Street</p>
+                        <p class="mb-0">City Center, 10000</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Custom Styles -->
 <style>
-    .carousel-img {
-        height: 300px;
-        object-fit: cover;
+    .bg-coffee-medium {
+        background-color: var(--coffee-medium);
     }
 </style>

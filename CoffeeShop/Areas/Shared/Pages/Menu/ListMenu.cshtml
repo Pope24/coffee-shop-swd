@@ -1,90 +1,192 @@
 ﻿@page
 @model CoffeeShop.Areas.Shared.Pages.Menu.ListMenuModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Menu";
 }
-<h2>Menu Items</h2>
 
-<p2>Menu Items</p2>
-
-<p>
-    <a asp-area="Admin" asp-page="/Menu/CreateItem">Create New Item</a>
-</p>
-<!-- Global Search Input -->
-<form method="get">
-    <div class="form-inline mb-3">
-        <input type="text" name="searchQuery" class="form-control" placeholder="Global Search" value="@Model.SearchQuery" />
-        <button type="submit" class="btn btn-primary ml-2">Search</button>
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-center">Our Menu</h2>
+            <p class="text-center text-muted">Discover our delicious coffee and food options</p>
+        </div>
     </div>
-</form>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Sizes and Prices</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <form method="get" class="d-flex">
+                <input type="text" name="searchQuery" class="form-control" placeholder="Search our menu..." value="@Model.SearchQuery" />
+                <button type="submit" class="btn btn-primary ms-2">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
         @foreach (var productGroup in Model.ProductSize.GroupBy(p => new { p.Product.ProductName, p.Product.ImageUrl }))
         {
-            <tr>
-                <td>
-                    <strong>@productGroup.Key.ProductName</strong>
-                    <div>
-                        <img src="@productGroup.Key.ImageUrl" alt="Product Image" class="product-image" />
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-img-container" style="height: 200px; overflow: hidden;">
+                        <img src="@productGroup.Key.ImageUrl" alt="@productGroup.Key.ProductName" class="card-img-top" style="object-fit: cover; height: 100%; width: 100%;" />
                     </div>
-                </td>
-                <td>
-                    @foreach (var item in productGroup)
-                    {
-                        <p>@item.Size.SizeName - @item.Price.ToString("C")</p>
-                    }
-                </td>
-                <td>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        @foreach (var item in productGroup)
+                    <div class="card-body">
+                        <h5 class="card-title">@productGroup.Key.ProductName</h5>
+                        <div class="sizes-container">
+                            @foreach (var item in productGroup)
+                            {
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="size-name">@item.Size.SizeName</span>
+                                    <span class="price-tag">@item.Price.ToString("C")</span>
+                                </div>
+                            }
+                        </div>
+                        @if (!User.IsInRole("Admin"))
                         {
-                            <div>
-                                <a asp-page="./Edit" asp-route-id="@item.ProductSizeID">Edit</a> |
-                                <a asp-page="./Delete" asp-route-id="@item.ProductSizeID">Delete</a>
+                            <div class="mt-3">
+                                @foreach (var item in productGroup)
+                                {
+                                    <form asp-page="./AddToCart" method="post" class="mb-2">
+                                        <input type="hidden" name="ProductSizeID" value="@item.ProductSizeID" />
+                                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">
+                                            <i class="fas fa-cart-plus me-1"></i>Add @item.Size.SizeName to Cart
+                                        </button>
+                                    </form>
+                                }
                             </div>
                         }
-                    }
-                    else
-                    {
-                        @foreach (var item in productGroup)
-                        {
-                            <div>
-                                <form asp-page="./AddToCart" method="post">
-                                    <input type="hidden" name="ProductSizeID" value="@item.ProductSizeID" />
-                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
-                                </form>
-                            </div>
-                        }
-                    }
-                </td>
-            </tr>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
-@{
-    var prevDisabled = !Model.ProductSize.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.ProductSize.HasNextPage ? "disabled" : "";
-    int totalPages = Model.ProductSize.TotalPages;
-    int currentPage = Model.ProductSize.PageIndex;
-}
-<div class="pagination">
-    <button onclick="navigateToPage(@(currentPage - 1))" class="btn btn-primary @prevDisabled">Previous</button>
+    </div>
 
-    @for (int i = 1; i <= 3; i++)
-    {
-        <button onclick="navigateToPage(@i)" class="btn btn-primary @(currentPage == i ? "active" : "")">@i</button>
+    @{
+        var prevDisabled = !Model.ProductSize.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.ProductSize.HasNextPage ? "disabled" : "";
+        int totalPages = Model.ProductSize.TotalPages;
+        int currentPage = Model.ProductSize.PageIndex;
     }
-
-    <button onclick="navigateToPage(@(currentPage + 1))" class="btn btn-primary @nextDisabled">Next</button>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Showing page @currentPage of @totalPages
+                </div>
+                <nav aria-label="Menu pagination">
+                    <ul class="pagination">
+                        <li class="page-item @prevDisabled">
+                            <button onclick="navigateToPage(@(currentPage - 1))" class="page-link" @(prevDisabled == "disabled" ? "disabled" : "")>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </li>
+                        
+                        @{
+                            var startPage = Math.Max(1, currentPage - 2);
+                            var endPage = Math.Min(totalPages, startPage + 4);
+                            
+                            if (endPage - startPage < 4 && startPage > 1)
+                            {
+                                startPage = Math.Max(1, endPage - 4);
+                            }
+                        }
+                        
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(currentPage == i ? "active" : "")">
+                                <button onclick="navigateToPage(@i)" class="page-link">@i</button>
+                            </li>
+                        }
+                        
+                        <li class="page-item @nextDisabled">
+                            <button onclick="navigateToPage(@(currentPage + 1))" class="page-link" @(nextDisabled == "disabled" ? "disabled" : "")>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
 </div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    .card {
+        transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .price-tag {
+        font-weight: bold;
+        color: #5D4037;
+    }
+    
+    .size-name {
+        color: #757575;
+    }
+    
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding: 0.75rem 1rem;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .pagination-info {
+        color: #757575;
+        font-size: 0.9rem;
+    }
+    
+    .pagination {
+        margin-bottom: 0;
+        gap: 5px;
+    }
+    
+    .pagination .page-item .page-link {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 500;
+        border: 1px solid #e0e0e0;
+        transition: all 0.2s ease;
+        padding: 0;
+        margin: 0;
+        color: #5D4037;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #8D6E63;
+        border-color: #8D6E63;
+        color: white;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .pagination .page-item .page-link:hover:not([disabled]) {
+        background-color: #D7CCC8;
+        transform: translateY(-2px);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+    
+    .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+</style>
 
 <script>
     function navigateToPage(pageIndex) {

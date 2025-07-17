@@ -1,91 +1,210 @@
 ﻿@page
 @model CoffeeShop.Areas.Admin.Pages.Product.IndexModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Products Management";
 }
 
-<h1>List Products</h1>
+<div class="admin-content-header">
+    <h1>Products Management</h1>
+    <div class="admin-actions">
+        <a asp-area="Admin" asp-page="/Product/CreateProduct" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Add New Product
+        </a>
+    </div>
+</div>
 
-<p>
-    <a asp-area="Admin" asp-page="/Product/CreateProduct">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Category")
-            </th>
-            <th>
-                @Html.DisplayName("ProductName")
-            </th>
-            <th>
-                @Html.DisplayName("productDescription")
-            </th>
-            <th>
-                @Html.DisplayName("Discount")
-            </th>
-            <th>
-                @Html.DisplayName("ImageUrl")
-            </th>
-            <th>
-                @Html.DisplayName("IsAvailable")
-            </th>
-            <th>
-                @Html.DisplayName("IsDeleted")
-            </th>
-            <th>
-                @Html.DisplayName("IsActive")
-            </th>
-            <th>
-                @Html.DisplayName("CreateDate")
-            </th>
-            <th>
-                @Html.DisplayName("ModifyDate")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Product)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductDescription)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Discount)
-                </td>
-                <td>
-                    <img src="@item.ImageUrl" alt="Product Image" style="max-width: 100px; max-height: 100px;" />
-                </td>
+<div class="admin-content-body">
+    <div class="table-responsive">
+        <table class="table admin-table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayName("Category")</th>
+                    <th>@Html.DisplayName("Product")</th>
+                    <th>@Html.DisplayName("Description")</th>
+                    <th>@Html.DisplayName("Discount")</th>
+                    <th>@Html.DisplayName("Image")</th>
+                    <th>@Html.DisplayName("Status")</th>
+                    <th>@Html.DisplayName("Created")</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Product)
+                {
+                    <tr>
+                        <td>
+                            <span class="category-badge">@Html.DisplayFor(modelItem => item.Category.CategoryName)</span>
+                        </td>
+                        <td>
+                            <strong>@Html.DisplayFor(modelItem => item.ProductName)</strong>
+                        </td>
+                        <td>
+                            <div class="description-text">@Html.DisplayFor(modelItem => item.ProductDescription)</div>
+                        </td>
+                        <td>
+                            @if (item.Discount > 0)
+                            {
+                                <span class="discount-badge">@item.Discount%</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                        <td>
+                            <img src="@item.ImageUrl" alt="Product Image" class="product-thumbnail" />
+                        </td>
+                        <td>
+                            <div class="status-indicators">
+                                @if (item.IsAvailable)
+                                {
+                                    <span class="status-badge available">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge unavailable">Unavailable</span>
+                                }
+                                
+                                @if (item.IsDeleted)
+                                {
+                                    <span class="status-badge deleted">Deleted</span>
+                                }
+                                
+                                @if (!item.IsActive)
+                                {
+                                    <span class="status-badge inactive">Inactive</span>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-info">
+                                <div>@item.CreateDate.ToString("MMM dd, yyyy")</div>
+                                @if (item.ModifyDate.HasValue)
+                                {
+                                    <small class="text-muted">Updated: @item.ModifyDate.Value.ToString("MMM dd, yyyy")</small>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a asp-area="Admin" asp-page="/Product/EditProduct" asp-route-id="@item.ProductID" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-area="Shared" asp-page="/Product/DetailProduct" asp-route-id="@item.ProductID" class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-area="Admin" asp-page="/Product/DeleteProduct" asp-route-id="@item.ProductID" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsAvailable)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsDeleted)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsActive)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ModifyDate)
-                </td>
-                <td>
-                    <a asp-area="Admin" asp-page="/Product/EditProduct" asp-route-id="@item.ProductID">Edit</a> |
-                    <a asp-area="Shared" asp-page="/Product/DetailProduct" asp-route-id="@item.ProductID">Details</a> |
-                    <a asp-area="Admin" asp-page="/Product/DeleteProduct" asp-route-id="@item.ProductID">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<style>
+    .admin-content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .admin-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .product-thumbnail {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--coffee-light);
+    }
+    
+    .category-badge {
+        background-color: var(--coffee-light);
+        color: var(--coffee-dark);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .description-text {
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .discount-badge {
+        background-color: var(--coffee-accent);
+        color: var(--coffee-dark);
+        padding: 3px 8px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    
+    .status-indicators {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .status-badge {
+        padding: 3px 8px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+    
+    .status-badge.available {
+        background-color: rgba(67, 160, 71, 0.15);
+        color: var(--coffee-success);
+    }
+    
+    .status-badge.unavailable {
+        background-color: rgba(229, 57, 53, 0.15);
+        color: var(--coffee-danger);
+    }
+    
+    .status-badge.deleted {
+        background-color: rgba(97, 97, 97, 0.15);
+        color: #616161;
+    }
+    
+    .status-badge.inactive {
+        background-color: rgba(255, 179, 0, 0.15);
+        color: var(--coffee-warning);
+    }
+    
+    .date-info {
+        font-size: 0.9rem;
+    }
+    
+    .date-info small {
+        font-size: 0.8rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .action-buttons .btn {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+</style>

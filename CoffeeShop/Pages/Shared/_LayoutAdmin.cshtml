@@ -1,112 +1,192 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="admin-page">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CoffeeShop</title>
+    <title>@ViewData["Title"] - CoffeeShop Admin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CoffeeShop.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/layoutAdmin.css" asp-append-version="true" />
-
 </head>
-<body>
+<body class="admin-page">
+    <!-- Header/Navbar -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-coffee mb-0 admin-navbar">
             <div class="container-fluid">
-                <div class="d-flex align-items-center justify-content-between w-100">
-                    <a class="navbar-brand me-auto ms-3" asp-area="Admin" asp-page="/Index">CoffeeShop</a>
-                    <ul class="navbar-nav">
-                        @if (string.IsNullOrEmpty(Context.Session.GetString("IsLogin")))
-
-                        {
-                            <li class="nav-item">
-                                <a class="btn btn-outline-dark me-2" asp-area="Shared" asp-page="/Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-outline-secondary me-2" asp-area="Shared" asp-page="/Register">Register</a>
-                            </li>
-                        }
-
-                        else
-                        {
-                            <form method="post" class="m-0">
-                                <li class="nav-item">
-                                    <button class="btn btn-outline-danger"
-                                            asp-area="Shared"
-                                            asp-page="/Login"
-                                            asp-page-handler="Logout">
-                                        Logout
-                                    </button>
-                                </li>
-                            </form>
-                        }
-                    </ul>
+                <div class="d-flex align-items-center">
+                    <button id="sidebarToggle" class="btn btn-link text-light d-lg-none me-2">
+                        <i class="bi bi-list fs-4"></i>
+                    </button>
+                    <a class="navbar-brand text-white" asp-area="Admin" asp-page="/Index"><i class="bi bi-cup-hot me-2"></i>CoffeeShop Admin</a>
                 </div>
+                <ul class="navbar-nav ms-auto">
+                    @if (string.IsNullOrEmpty(Context.Session.GetString("IsLogin")))
+                    {
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light me-2" asp-area="Shared" asp-page="/Login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-light me-2" asp-area="Shared" asp-page="/Register"><i class="bi bi-person-plus"></i> Register</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle me-1"></i> Admin
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <form method="post" class="m-0">
+                                    <li>
+                                        <button class="dropdown-item text-danger" asp-area="Shared" asp-page="/Login" asp-page-handler="Logout">
+                                            <i class="bi bi-box-arrow-right"></i> Logout
+                                        </button>
+                                    </li>
+                                </form>
+                            </ul>
+                        </li>
+                    }
+                </ul>
             </div>
         </nav>
     </header>
 
-    <div class="d-flex m-2 h-100 position-relative">
-        <!-- Sidebar menu -->
-        <div class="navbar-left custom-sidebar border-end p-3 h-auto bg-dark sticky-top">
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <div class="custom-sidebar" id="sidebar">
+            <div class="sidebar-header">Main Menu</div>
             <ul class="nav flex-column">
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Admin/Index" ? "active" : "")"
-                       asp-area="Admin" asp-page="/Index">🏠 Home</a>
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().EndsWith("/Admin/Index") ? "active" : "")"
+                       asp-area="Admin" asp-page="/Index">
+                        <i class="bi bi-house-door"></i> Dashboard
+                    </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Admin/Chats/Index" ? "active" : "")"
-                       asp-area="Admin" asp-page="/Chats/Index">💬 Chat Room</a>
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().Contains("/Admin/Chats") ? "active" : "")"
+                       asp-area="Admin" asp-page="/Chats/Index">
+                        <i class="bi bi-chat-dots"></i> Chat Room
+                    </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Admin/Tables/Index" ? "active" : "")"
-                       asp-area="Admin" asp-page="/Tables/Index">📋 Table</a>
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().Contains("/Admin/Tables") ? "active" : "")"
+                       asp-area="Admin" asp-page="/Tables/Index">
+                        <i class="bi bi-grid-3x3"></i> Tables
+                    </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Admin/User/Index" ? "active" : "")"
-                       asp-area="Admin" asp-page="/User/Index">👤 User</a>
+            </ul>
+            
+            <div class="sidebar-header">Management</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().Contains("/Admin/User") ? "active" : "")"
+                       asp-area="Admin" asp-page="/User/Index">
+                        <i class="bi bi-people"></i> Users
+                    </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Admin/Size/Index" ? "active" : "")"
-                       asp-area="Admin" asp-page="/Size/Index">📏 Size</a>
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().Contains("/Admin/Category") ? "active" : "")"
+                       asp-area="Admin" asp-page="/Category/Index">
+                        <i class="bi bi-tags"></i> Categories
+                    </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Admin/Category/Index" ? "active" : "")"
-                       asp-area="Admin" asp-page="/Category/Index">📂 Category</a>
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().Contains("/Admin/Product") ? "active" : "")"
+                       asp-area="Admin" asp-page="/Product/Index">
+                        <i class="bi bi-cup"></i> Products
+                    </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Admin/Product/Index" ? "active" : "")"
-                       asp-area="Admin" asp-page="/Product/Index">🛒 Product</a>
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().Contains("/Admin/Size") ? "active" : "")"
+                       asp-area="Admin" asp-page="/Size/Index">
+                        <i class="bi bi-rulers"></i> Sizes
+                    </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Admin/Menu/Index" ? "active" : "")"
-                       asp-area="Admin" asp-page="/Menu/Index">🍽️ Menu</a>
+            </ul>
+            
+            <div class="sidebar-header">Operations</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().Contains("/Admin/Menu") ? "active" : "")"
+                       asp-area="Admin" asp-page="/Menu/Index">
+                        <i class="bi bi-journal-text"></i> Menu
+                    </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link @(Context.Request.Path == "/Shared/Order/OrderPage" ? "active" : "")"
-                       asp-area="Shared" asp-page="/Order/OrderPage" asp-route-Id="1">📝 Order</a>
+                <li class="nav-item">
+                    <a class="sidebar-link @(Context.Request.Path.ToString().Contains("/Shared/Order/OrderPage") ? "active" : "")"
+                       asp-area="Shared" asp-page="/Order/OrderPage" asp-route-Id="1">
+                        <i class="bi bi-cart"></i> Orders
+                    </a>
                 </li>
             </ul>
         </div>
 
-        <!-- Main content -->
-        <div class="main-content container">
-            <main role="main" class="pb-3">
+        <!-- Main Content -->
+        <div class="main-content-wrapper" style="margin-top:80px;">
+            <div class="main-content">
                 @RenderBody()
-            </main>
+            </div>
         </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - CoffeeShop - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
+    <!-- Toggle Button for Mobile -->
+    <button id="sidebarToggleMobile" class="sidebar-toggle-btn">
+        <i class="bi bi-list"></i>
+    </button>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
+            
+            function toggleSidebar() {
+                sidebar.classList.toggle('show');
+                document.body.classList.toggle('sidebar-open');
+            }
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+            
+            if (sidebarToggleMobile) {
+                sidebarToggleMobile.addEventListener('click', toggleSidebar);
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                const viewport = window.innerWidth;
+                if (viewport < 768 && 
+                    !sidebar.contains(event.target) && 
+                    event.target !== sidebarToggle && 
+                    event.target !== sidebarToggleMobile && 
+                    !sidebarToggle.contains(event.target) &&
+                    !sidebarToggleMobile.contains(event.target) &&
+                    sidebar.classList.contains('show')) {
+                    toggleSidebar();
+                }
+            });
+            
+            // Fix for tab navigation - ensure sidebar is visible in desktop mode
+            function adjustSidebarForScreenSize() {
+                if (window.innerWidth >= 768) {
+                    sidebar.classList.remove('show');
+                    document.body.classList.remove('sidebar-open');
+                }
+            }
+            
+            window.addEventListener('resize', adjustSidebarForScreenSize);
+            adjustSidebarForScreenSize();
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
